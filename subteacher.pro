@@ -1,16 +1,21 @@
 HEADERS += \
-    mainwindow.h \
-    stvideoplayer.h \
-    submanager.h
+    subteacherwindow.h \
+    settingswindow.h \
+    wordbasewindow.h \
+    newmoviewindow.h
 
 SOURCES += \
-    mainwindow.cpp \
+    subteacherwindow.cpp \
     main.cpp \
-    stvideoplayer.cpp \
-    submanager.cpp
+    settingswindow.cpp \
+    wordbasewindow.cpp \
+    newmoviewindow.cpp
 
 FORMS += \
-    mainwindow.ui
+    subteacherwindow.ui \
+    settingswindow.ui \
+    wordbasewindow.ui \
+    newmoviewindow.ui
 
 QT += \
     phonon

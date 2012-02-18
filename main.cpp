@@ -1,17 +1,11 @@
-
-#include "submanager.h"
 #include <QApplication>
-#include <QPushButton>
+#include "subteacherwindow.h"
 
 int main(int argc, char **argv){
     QApplication app(argc, argv);
-    MainWindow window;
-    STVideoPlayer *vp = new STVideoPlayer("../subteacher/film.avi", &window);
-    SubManager *sm = new SubManager("../subteacher/film.srt", "../subteacher/film2.srt", &window, vp);
 
-    window.show();
-    app.exec();
+    SubteacherWindow sw;
+    sw.show();
 
-    delete sm;
-    return 0;
+    return app.exec();
 }
