@@ -3,7 +3,8 @@
 #include "settingswindow.h"
 #include "wordbasewindow.h"
 #include <QFileDialog>
-#include "newmoviewindow.h"
+#include "newmediawindow.h"
+#include "loadmediawindow.h"
 #include <QKeyEvent>
 #include <QShortcut>
 
@@ -11,7 +12,8 @@ SubteacherWindow::SubteacherWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::SubteacherWindow),
     settingsWindow(new SettingsWindow(this)), wordBaseWindow(new WordBaseWindow(this)),
-    fileWindow(new QFileDialog(this)), newMovieWindow(new NewMovieWindow(this)),
+    fileWindow(new QFileDialog(this)), newMediaWindow(new NewMediaWindow(this)),
+    loadMediaWindow(new LoadMediaWindow(this)),
     checkShortcut(new QShortcut(Qt::CTRL + Qt::Key_Space, this)),
     hintShortcut(new QShortcut(Qt::SHIFT + Qt::Key_Space, this))
 {
@@ -20,8 +22,7 @@ SubteacherWindow::SubteacherWindow(QWidget *parent) :
     initSlotsAndSignals();
     VideoPlayer *vp = new VideoPlayer(VideoCategory, ui->videoFrame);
     vp->setMinimumWidth(width());
-    vp->load(MediaSource("../filam.avi"));
-    vp->play();
+    vp->load(MediaSource("../film.avi"));
 }
 
 SubteacherWindow::~SubteacherWindow()
@@ -54,7 +55,7 @@ void SubteacherWindow::initSlotsAndSignals(){
     QObject::connect(ui->wordbaseButton, SIGNAL(clicked()), this, SLOT(showWordBase()));
     QObject::connect(ui->loadButton, SIGNAL(clicked()), this, SLOT(showLoadWindow()));
     QObject::connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(showSaveWindow()));
-    QObject::connect(ui->newButton, SIGNAL(clicked()), this, SLOT(showNewMovieWindow()));
+    QObject::connect(ui->newButton, SIGNAL(clicked()), this, SLOT(showNewMediaWindow()));
 
     QObject::connect(checkShortcut, SIGNAL(activated()), ui->checkButton, SLOT(animateClick()));
     QObject::connect(hintShortcut, SIGNAL(activated()), ui->hintButton, SLOT(animateClick()));
@@ -69,8 +70,10 @@ void SubteacherWindow::showWordBase(){
 }
 
 void SubteacherWindow::showLoadWindow(){
-    fileWindow->setAcceptMode(QFileDialog::AcceptOpen);
-    fileWindow->show();
+    QStringList sl;
+    sl.append("first");
+    sl.append("second");
+    loadMediaWindow->show(&sl);
 }
 
 void SubteacherWindow::showSaveWindow(){
@@ -78,6 +81,6 @@ void SubteacherWindow::showSaveWindow(){
     fileWindow->show();
 }
 
-void SubteacherWindow::showNewMovieWindow(){
-    newMovieWindow->show();
+void SubteacherWindow::showNewMediaWindow(){
+    newMediaWindow->show();
 }

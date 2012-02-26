@@ -2,20 +2,25 @@ HEADERS += \
     subteacherwindow.h \
     settingswindow.h \
     wordbasewindow.h \
-    newmoviewindow.h
+    newmediawindow.h \
+    loadmediawindow.h \
+    submanager.h
 
 SOURCES += \
     subteacherwindow.cpp \
     main.cpp \
     settingswindow.cpp \
     wordbasewindow.cpp \
-    newmoviewindow.cpp
+    newmediawindow.cpp \
+    loadmediawindow.cpp \
+    submanager.cpp
 
 FORMS += \
     subteacherwindow.ui \
     settingswindow.ui \
     wordbasewindow.ui \
-    newmoviewindow.ui
+    newmediawindow.ui \
+    loadmediawindow.ui
 
 QT += \
     phonon

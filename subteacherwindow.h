@@ -13,7 +13,8 @@ class SubteacherWindow;
 class SettingsWindow;
 class WordBaseWindow;
 class QFileDialog;
-class NewMovieWindow;
+class NewMediaWindow;
+class LoadMediaWindow;
 class QShortcut;
 
 class SubteacherWindow : public QMainWindow
@@ -33,7 +34,8 @@ private:
     SettingsWindow *settingsWindow;
     WordBaseWindow *wordBaseWindow;
     QFileDialog *fileWindow;
-    NewMovieWindow *newMovieWindow;
+    NewMediaWindow *newMediaWindow;
+    LoadMediaWindow *loadMediaWindow;
 
     QShortcut *checkShortcut;
     QShortcut *hintShortcut;
@@ -43,7 +45,7 @@ public slots:
     void showWordBase();
     void showLoadWindow();
     void showSaveWindow();
-    void showNewMovieWindow();
+    void showNewMediaWindow();
 };
 
 #endif // SUBTEACHERWINDOW_H
