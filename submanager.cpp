@@ -6,7 +6,7 @@
 #include <QStack>
 #include <QStringList>
 
-SubManager::SubManager(QString filePath) :  at(0), init(false){
+SubManager::SubManager(QString filePath, int subMargin) :  at(0), subMargin(subMargin), init(false){
     QFile file(filePath);
     QString line;
     QStack<int> subStartStack;
@@ -23,7 +23,7 @@ SubManager::SubManager(QString filePath) :  at(0), init(false){
 
             subStack.push_front(new QString());
             while(!(line = ts.readLine()).isEmpty()){
-                subStack.front()->append(line);
+                subStack.front()->append(line + "\n");
             }
         }
         if(n > 0){
@@ -56,6 +56,33 @@ SubManager::~SubManager(){
     }
 }
 
+bool SubManager::next(){
+    if(n == ++at){
+        return false;
+    }
+    return true;
+}
+
+QString SubManager::currentSub(){
+    return *sub[at];
+}
+
+int SubManager::currentSubStart(){
+    return subStart[at];
+}
+
+int SubManager::getSubMargin(){
+    return subMargin;
+}
+
+bool SubManager::startSubFrame(int current){
+    return (current <  subStart[at]-subMargin);
+}
+
+bool SubManager::finishSubFrame(int current){
+    return (current > subEnd[at]+subMargin);
+}
+
 int SubManager::getSubStart(const QString &time){
     return timeToInt(time.split(" --> ").at(0));
 }
@@ -71,6 +98,3 @@ int SubManager::timeToInt(const QString &time){
     return ms.toInt() + tmp.at(2).toInt()*1000 + tmp.at(1).toInt()*60000 + tmp.at(0).toInt()*3600000;
 }
 
-QString SubManager::getSub(int i){
-    return *sub[i];
-}

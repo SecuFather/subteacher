@@ -5,6 +5,8 @@
 #include <QFileDialog>
 #include "newmediawindow.h"
 #include "loadmediawindow.h"
+#include "submanager.h"
+#include "subteacherthread.h"
 #include <QKeyEvent>
 #include <QShortcut>
 
@@ -19,15 +21,22 @@ SubteacherWindow::SubteacherWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initWidgets();
-    initSlotsAndSignals();
-    VideoPlayer *vp = new VideoPlayer(VideoCategory, ui->videoFrame);
+
+    vp = new VideoPlayer(VideoCategory, ui->videoFrame);
     vp->setMinimumWidth(width());
-    vp->load(MediaSource("../film.avi"));
+    vp->load(MediaSource("../../film.avi"));
+    sm = new SubManager("../../film.srt");
+    stt = new SubTeacherThread(vp, sm);
+
+    initSlotsAndSignals();
 }
 
 SubteacherWindow::~SubteacherWindow()
 {
-    delete ui;
+    delete stt;
+    delete sm;
+    delete vp;
+    delete ui;    
 }
 
 void SubteacherWindow::initWidgets(){
@@ -45,6 +54,7 @@ void SubteacherWindow::initWidgets(){
 
     ui->checkButton->setIcon(QIcon::fromTheme("system-search"));
     ui->hintButton->setIcon(QIcon::fromTheme("help-contents"));
+    ui->playButton->setIcon(QIcon::fromTheme("media-playback-start"));
     ui->goBackButton->setIcon(QIcon::fromTheme("media-skip-backward"));
     ui->skipButton->setIcon(QIcon::fromTheme("media-skip-forward"));
 }
@@ -58,7 +68,11 @@ void SubteacherWindow::initSlotsAndSignals(){
     QObject::connect(ui->newButton, SIGNAL(clicked()), this, SLOT(showNewMediaWindow()));
 
     QObject::connect(checkShortcut, SIGNAL(activated()), ui->checkButton, SLOT(animateClick()));
-    QObject::connect(hintShortcut, SIGNAL(activated()), ui->hintButton, SLOT(animateClick()));
+    QObject::connect(hintShortcut, SIGNAL(activated()), ui->hintButton, SLOT(animateClick()));        
+
+    QObject::connect(ui->checkButton, SIGNAL(clicked(bool)), this, SLOT(checkAnswer()));
+    QObject::connect(stt, SIGNAL(mediaPlay(bool)), ui->playButton, SLOT(setChecked(bool)));
+    QObject::connect(stt, SIGNAL(showSubs()), this, SLOT(showSubs()));
 }
 
 void SubteacherWindow::showSettings(){
@@ -83,4 +97,12 @@ void SubteacherWindow::showSaveWindow(){
 
 void SubteacherWindow::showNewMediaWindow(){
     newMediaWindow->show();
+}
+
+void SubteacherWindow::checkAnswer(){
+    stt->run(true);
+}
+
+void SubteacherWindow::showSubs(){
+    ui->subLabel->setText(sm->currentSub());
 }

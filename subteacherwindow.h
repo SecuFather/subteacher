@@ -15,6 +15,8 @@ class WordBaseWindow;
 class QFileDialog;
 class NewMediaWindow;
 class LoadMediaWindow;
+class SubTeacherThread;
+class SubManager;
 class QShortcut;
 
 class SubteacherWindow : public QMainWindow
@@ -28,17 +30,20 @@ public:
     void initWidgets();
     void initSlotsAndSignals();
     
-private:
-    VideoPlayer *vp;
+private:    
     Ui::SubteacherWindow *ui;
     SettingsWindow *settingsWindow;
     WordBaseWindow *wordBaseWindow;
     QFileDialog *fileWindow;
     NewMediaWindow *newMediaWindow;
-    LoadMediaWindow *loadMediaWindow;
+    LoadMediaWindow *loadMediaWindow;    
 
     QShortcut *checkShortcut;
     QShortcut *hintShortcut;
+
+    VideoPlayer *vp;
+    SubManager *sm;
+    SubTeacherThread *stt;
 
 public slots:
     void showSettings();
@@ -46,6 +51,9 @@ public slots:
     void showLoadWindow();
     void showSaveWindow();
     void showNewMediaWindow();
+
+    void checkAnswer();
+    void showSubs();
 };
 
 #endif // SUBTEACHERWINDOW_H

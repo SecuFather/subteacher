@@ -4,7 +4,8 @@ HEADERS += \
     wordbasewindow.h \
     newmediawindow.h \
     loadmediawindow.h \
-    submanager.h
+    submanager.h \
+    subteacherthread.h
 
 SOURCES += \
     subteacherwindow.cpp \
@@ -13,7 +14,8 @@ SOURCES += \
     wordbasewindow.cpp \
     newmediawindow.cpp \
     loadmediawindow.cpp \
-    submanager.cpp
+    submanager.cpp \
+    subteacherthread.cpp
 
 FORMS += \
     subteacherwindow.ui \
