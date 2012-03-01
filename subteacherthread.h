@@ -23,7 +23,8 @@ private:
 signals:
     void mediaPlay(bool);
     void mediaRestart();
-    void showSubs();
+    void showSubs(bool);
+
 };
 
 #endif // SUBTEACHERTHREAD_H

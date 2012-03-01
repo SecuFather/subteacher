@@ -38,6 +38,7 @@ SubManager::SubManager(QString filePath, int subMargin) :  at(0), subMargin(subM
                 subEnd[i] = subEndStack.top();
                 subEndStack.pop_back();
                 sub[i] = subStack.top();
+                sub[i]->replace('#', ' ');
                 subStack.pop_back();
             }
         }
@@ -63,12 +64,61 @@ bool SubManager::next(){
     return true;
 }
 
+QString SubManager::currentHint(QString ans){
+    int e;
+    return currentHint(ans, e);
+}
+
+
+QString SubManager::currentHint(QString ans, int &e){
+    QString result = *sub[at];
+    int ansLength = ans.length();
+    int resLength = result.length();
+    e=0;
+
+    for(int i=0,j=0; i<resLength;){
+        while(i<resLength && !result[i].isLetterOrNumber()){
+            ++i;
+        }
+        while(j<ansLength && !ans[j].isLetterOrNumber()){
+            ++j;
+        }
+        while(i<resLength && result[i].isLetterOrNumber()){
+            if(j<ansLength && ans[j].isLetterOrNumber()){
+                if(ans[j].toLower() != result[i].toLower()){
+                    result[i]='#';
+                    ++e;
+                }
+                ++j;
+            }else{
+                result[i]='#';
+                ++e;
+            }
+            ++i;
+        }
+        while(j<ansLength && ans[j].isLetterOrNumber()){
+            ++j;
+        }
+    }    
+    return result;
+}
+
 QString SubManager::currentSub(){
     return *sub[at];
 }
 
 int SubManager::currentSubStart(){
     return subStart[at];
+}
+
+QString SubManager::help(QString hint){
+    for(int i=0; i<hint.length(); ++i){
+        if(!hint[i].isLetterOrNumber() && sub[at]->at(i).isLetterOrNumber()){
+            hint[i] = sub[at]->at(i);
+            return hint;
+        }
+    }
+    return hint;
 }
 
 int SubManager::getSubMargin(){
@@ -82,6 +132,7 @@ bool SubManager::startSubFrame(int current){
 bool SubManager::finishSubFrame(int current){
     return (current > subEnd[at]+subMargin);
 }
+
 
 int SubManager::getSubStart(const QString &time){
     return timeToInt(time.split(" --> ").at(0));

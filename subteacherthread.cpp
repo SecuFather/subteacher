@@ -8,6 +8,8 @@ SubTeacherThread::SubTeacherThread(VideoPlayer *vp, SubManager *sm) :
 }
 
 void SubTeacherThread::run(){    
+    bool b=false;
+
     while(true){
         while(!step);
 
@@ -19,22 +21,23 @@ void SubTeacherThread::run(){
             vp->seek(s);
             while(sm->finishSubFrame(vp->currentTime()));
             if(correct){
+                b = false;
                 if(!sm->next()){
                     emit mediaRestart();
                 }
+            }else{
+                b = true;
             }
         }
 
-        emit mediaPlay(true);
-        vp->play();
+        emit mediaPlay(true);        
 
         while(sm->startSubFrame(vp->currentTime()));
-        emit showSubs();
+        emit showSubs(b);
 
         while(!sm->finishSubFrame(vp->currentTime()));
 
-        emit mediaPlay(false);
-        vp->pause();        
+        emit mediaPlay(false);        
 
         step = false;        
     }

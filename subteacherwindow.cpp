@@ -17,7 +17,8 @@ SubteacherWindow::SubteacherWindow(QWidget *parent) :
     fileWindow(new QFileDialog(this)), newMediaWindow(new NewMediaWindow(this)),
     loadMediaWindow(new LoadMediaWindow(this)),
     checkShortcut(new QShortcut(Qt::CTRL + Qt::Key_Space, this)),
-    hintShortcut(new QShortcut(Qt::SHIFT + Qt::Key_Space, this))
+    hintShortcut(new QShortcut(Qt::Key_F1, this)),
+    playShortcut(new QShortcut(Qt::Key_F5, this))
 {
     ui->setupUi(this);
     initWidgets();
@@ -57,6 +58,8 @@ void SubteacherWindow::initWidgets(){
     ui->playButton->setIcon(QIcon::fromTheme("media-playback-start"));
     ui->goBackButton->setIcon(QIcon::fromTheme("media-skip-backward"));
     ui->skipButton->setIcon(QIcon::fromTheme("media-skip-forward"));
+
+    ui->ansEdit->setFocus();
 }
 
 void SubteacherWindow::initSlotsAndSignals(){
@@ -69,10 +72,14 @@ void SubteacherWindow::initSlotsAndSignals(){
 
     QObject::connect(checkShortcut, SIGNAL(activated()), ui->checkButton, SLOT(animateClick()));
     QObject::connect(hintShortcut, SIGNAL(activated()), ui->hintButton, SLOT(animateClick()));        
+    QObject::connect(playShortcut, SIGNAL(activated()), ui->playButton, SLOT(animateClick()));
 
-    QObject::connect(ui->checkButton, SIGNAL(clicked(bool)), this, SLOT(checkAnswer()));
-    QObject::connect(stt, SIGNAL(mediaPlay(bool)), ui->playButton, SLOT(setChecked(bool)));
-    QObject::connect(stt, SIGNAL(showSubs()), this, SLOT(showSubs()));
+    QObject::connect(ui->checkButton, SIGNAL(clicked()), this, SLOT(checkAnswer()));
+    QObject::connect(ui->hintButton, SIGNAL(clicked()), this, SLOT(help()));
+    QObject::connect(ui->playButton, SIGNAL(clicked(bool)), this, SLOT(setPlayButtonChecked(bool)));
+
+    QObject::connect(stt, SIGNAL(mediaPlay(bool)),this, SLOT(setPlayButtonChecked(bool)));
+    QObject::connect(stt, SIGNAL(showSubs(bool)), this, SLOT(showSubs(bool)));
 }
 
 void SubteacherWindow::showSettings(){
@@ -99,10 +106,32 @@ void SubteacherWindow::showNewMediaWindow(){
     newMediaWindow->show();
 }
 
-void SubteacherWindow::checkAnswer(){
-    stt->run(true);
+void SubteacherWindow::checkAnswer(){    
+    int e;
+    ui->subLabel->setText(sm->currentHint(ui->ansEdit->toPlainText(), e));
+    stt->run(!e);
+    if(!e){
+        ui->ansEdit->selectAll();
+    }
 }
 
-void SubteacherWindow::showSubs(){
-    ui->subLabel->setText(sm->currentSub());
+void SubteacherWindow::help(){
+    ui->subLabel->setText(sm->help(ui->subLabel->text()));
+}
+
+void SubteacherWindow::showSubs(bool b){
+    if(b){
+        ui->subLabel->setText(sm->currentHint(ui->ansEdit->toPlainText()));
+    }else{
+        ui->subLabel->setText(sm->currentHint(""));
+    }
+}
+
+void SubteacherWindow::setPlayButtonChecked(bool c){
+    ui->playButton->setChecked(c);
+    if(c){
+        vp->play();
+    }else{
+        vp->pause();
+    }
 }

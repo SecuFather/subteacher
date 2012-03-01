@@ -18,12 +18,17 @@ public:
     ~SubManager();
 
     bool next();
-    QString currentSub();
+
+    QString currentHint(QString ans);
+    QString currentHint(QString ans, int &e);
+    QString currentSub();    
     int currentSubStart();
+    QString help(QString hint);
+
     int getSubMargin();
 
     bool startSubFrame(int current);
-    bool finishSubFrame(int current);
+    bool finishSubFrame(int current);    
 };
 
 #endif // SUBMANAGER_H

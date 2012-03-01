@@ -40,6 +40,7 @@ private:
 
     QShortcut *checkShortcut;
     QShortcut *hintShortcut;
+    QShortcut *playShortcut;
 
     VideoPlayer *vp;
     SubManager *sm;
@@ -53,7 +54,10 @@ public slots:
     void showNewMediaWindow();
 
     void checkAnswer();
-    void showSubs();
+    void help();
+    void showSubs(bool b);
+
+    void setPlayButtonChecked(bool c);
 };
 
 #endif // SUBTEACHERWINDOW_H
