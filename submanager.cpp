@@ -18,6 +18,7 @@ SubManager::SubManager(QString filePath, int subMargin) :  at(0), subMargin(subM
 
         for(n=0; !ts.readLine().isEmpty(); ++n){
             line = ts.readLine();
+
             subStartStack.push_front(getSubStart(line));
             subEndStack.push_front(getSubEnd(line));
 

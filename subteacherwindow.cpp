@@ -9,6 +9,7 @@
 #include "subteacherthread.h"
 #include <QKeyEvent>
 #include <QShortcut>
+#include <QMessageBox>
 
 SubteacherWindow::SubteacherWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,18 +25,19 @@ SubteacherWindow::SubteacherWindow(QWidget *parent) :
     initWidgets();
 
     vp = new VideoPlayer(VideoCategory, ui->videoFrame);
-    vp->setMinimumWidth(width());
-    vp->load(MediaSource("../../film.avi"));
-    sm = new SubManager("../../film.srt");
+    sm = 0;
     stt = new SubTeacherThread(vp, sm);
+    vp->setMinimumWidth(width());
 
     initSlotsAndSignals();
 }
 
 SubteacherWindow::~SubteacherWindow()
-{
+{    
     delete stt;
-    delete sm;
+    if(sm){
+        delete sm;
+    }
     delete vp;
     delete ui;    
 }
@@ -69,6 +71,7 @@ void SubteacherWindow::initSlotsAndSignals(){
     QObject::connect(ui->loadButton, SIGNAL(clicked()), this, SLOT(showLoadWindow()));
     QObject::connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(showSaveWindow()));
     QObject::connect(ui->newButton, SIGNAL(clicked()), this, SLOT(showNewMediaWindow()));
+    QObject::connect(ui->continueButton, SIGNAL(clicked()), this, SLOT(playLast()));
 
     QObject::connect(checkShortcut, SIGNAL(activated()), ui->checkButton, SLOT(animateClick()));
     QObject::connect(hintShortcut, SIGNAL(activated()), ui->hintButton, SLOT(animateClick()));        
@@ -80,6 +83,21 @@ void SubteacherWindow::initSlotsAndSignals(){
 
     QObject::connect(stt, SIGNAL(mediaPlay(bool)),this, SLOT(setPlayButtonChecked(bool)));
     QObject::connect(stt, SIGNAL(showSubs(bool)), this, SLOT(showSubs(bool)));
+
+    QObject::connect(newMediaWindow, SIGNAL(accepted()), this, SLOT(addMedia()));
+    QObject::connect(loadMediaWindow, SIGNAL(accepted()), this, SLOT(loadMedia()));
+}
+
+void SubteacherWindow::noSubWarning(){
+    QMessageBox mb(this);
+    mb.setText("Load media first!");
+    mb.exec();
+}
+
+void SubteacherWindow::noMediaWarning(){
+    QMessageBox mb(this);
+    mb.setText("No media found!");
+    mb.exec();
 }
 
 void SubteacherWindow::showSettings(){
@@ -90,11 +108,8 @@ void SubteacherWindow::showWordBase(){
     wordBaseWindow->show();
 }
 
-void SubteacherWindow::showLoadWindow(){
-    QStringList sl;
-    sl.append("first");
-    sl.append("second");
-    loadMediaWindow->show(&sl);
+void SubteacherWindow::showLoadWindow(){    
+    loadMediaWindow->show(stt->getNameList());
 }
 
 void SubteacherWindow::showSaveWindow(){
@@ -106,17 +121,31 @@ void SubteacherWindow::showNewMediaWindow(){
     newMediaWindow->show();
 }
 
-void SubteacherWindow::checkAnswer(){    
-    int e;
-    ui->subLabel->setText(sm->currentHint(ui->ansEdit->toPlainText(), e));
-    stt->run(!e);
-    if(!e){
-        ui->ansEdit->selectAll();
+void SubteacherWindow::playLast(){
+    if(!sm){
+        loadMedia(0);
+    }
+}
+
+void SubteacherWindow::checkAnswer(){
+    if(sm){
+        int e;
+        ui->subLabel->setText(sm->currentHint(ui->ansEdit->toPlainText(), e));
+        stt->run(!e);
+        if(!e){
+            ui->ansEdit->selectAll();
+        }
+    }else{
+        noSubWarning();
     }
 }
 
 void SubteacherWindow::help(){
-    ui->subLabel->setText(sm->help(ui->subLabel->text()));
+    if(sm){
+        ui->subLabel->setText(sm->help(ui->subLabel->text()));
+    }else{
+        noSubWarning();
+    }
 }
 
 void SubteacherWindow::showSubs(bool b){
@@ -127,11 +156,41 @@ void SubteacherWindow::showSubs(bool b){
     }
 }
 
-void SubteacherWindow::setPlayButtonChecked(bool c){
-    ui->playButton->setChecked(c);
-    if(c){
-        vp->play();
+void SubteacherWindow::loadMedia(int i){
+    int at;
+    if(i<0){
+        at = loadMediaWindow->getIndex();
     }else{
-        vp->pause();
+        if(stt->getNameList()->count()){
+            at = i;
+        }else{
+            noMediaWarning();
+        }
+    }
+    vp->load(MediaSource(stt->getMedia(at)));
+    if(sm){
+        delete sm;
+    }
+    sm = new SubManager(stt->getSub(at));
+    stt->setSubManager(sm);
+    ui->subLabel->clear();
+}
+
+void SubteacherWindow::addMedia(){
+    stt->addMedia(newMediaWindow->getName(), newMediaWindow->getMedia(), newMediaWindow->getSub(),
+                  newMediaWindow->getTrSub(), 0);
+}
+
+void SubteacherWindow::setPlayButtonChecked(bool c){
+    if(sm){
+        ui->playButton->setChecked(c);
+        if(c){
+            vp->play();
+        }else{
+            vp->pause();
+        }
+    }else{
+        noSubWarning();
+        ui->playButton->setChecked(false);
     }
 }

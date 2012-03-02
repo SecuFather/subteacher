@@ -14,6 +14,11 @@ class NewMediaWindow : public QDialog
 public:
     explicit NewMediaWindow(QWidget *parent = 0);
     ~NewMediaWindow();
+
+    QString getName();
+    QString getMedia();
+    QString getSub();
+    QString getTrSub();
     
 private:
     Ui::NewMediaWindow *ui;

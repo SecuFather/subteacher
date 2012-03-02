@@ -34,7 +34,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="nameEdit"/>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label">
@@ -44,7 +44,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="mediaButton">
       <property name="text">
        <string>Browse...</string>
       </property>
@@ -58,7 +58,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="subButton">
       <property name="text">
        <string>Browse...</string>
       </property>
@@ -72,14 +72,14 @@
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="trSubButton">
       <property name="text">
        <string>Browse...</string>
       </property>
      </widget>
     </item>
     <item row="5" column="1">
-     <widget class="QDialogButtonBox" name="buttonBox_2">
+     <widget class="QDialogButtonBox" name="buttons">
       <property name="inputMethodHints">
        <set>Qt::ImhNone</set>
       </property>
@@ -102,5 +102,38 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttons</sender>
+   <signal>accepted()</signal>
+   <receiver>NewMediaWindow</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>242</x>
+     <y>158</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>260</x>
+     <y>181</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttons</sender>
+   <signal>rejected()</signal>
+   <receiver>NewMediaWindow</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>154</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>159</x>
+     <y>180</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

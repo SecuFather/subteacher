@@ -46,6 +46,9 @@ private:
     SubManager *sm;
     SubTeacherThread *stt;
 
+    void noSubWarning();
+    void noMediaWarning();
+
 public slots:
     void showSettings();
     void showWordBase();
@@ -53,9 +56,12 @@ public slots:
     void showSaveWindow();
     void showNewMediaWindow();
 
+    void playLast();
     void checkAnswer();
     void help();
-    void showSubs(bool b);
+    void showSubs(bool b);       
+    void loadMedia(int i=-1);
+    void addMedia();
 
     void setPlayButtonChecked(bool c);
 };

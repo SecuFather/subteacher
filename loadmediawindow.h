@@ -3,7 +3,13 @@
 
 #include <QDialog>
 
-class QStringList;
+class MediaRow : public QString{
+public:
+    QString name, media, sub, trSub;
+    int at;
+    MediaRow(QString name, QString media, QString sub, QString trSub, int at) :
+        QString(name), name(name), media(media), sub(sub), trSub(trSub), at(at){}
+};
 
 namespace Ui {
 class LoadMediaWindow;
@@ -18,6 +24,8 @@ public:
     ~LoadMediaWindow();
 
     void show(QStringList *mediaList);
+    QString getMedia();
+    int getIndex();
     
 private:
     Ui::LoadMediaWindow *ui;        
