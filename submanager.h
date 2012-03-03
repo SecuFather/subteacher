@@ -14,7 +14,7 @@ private:
     int getSubEnd(const QString &time);
     int timeToInt(const QString &time);
 public:
-    SubManager(QString filePath, int subMargin=0);
+    SubManager(QString filePath, int at, int subMargin=0);
     ~SubManager();
 
     bool next();
@@ -23,6 +23,7 @@ public:
     QString currentHint(QString ans, int &e);
     QString currentSub();    
     int currentSubStart();
+    int currentAt();
     QString help(QString hint);
 
     int getSubMargin();

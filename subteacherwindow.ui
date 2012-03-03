@@ -131,7 +131,7 @@
 color: #f7f7f7;</string>
        </property>
        <property name="text">
-        <string>Nie wiem</string>
+        <string/>
        </property>
        <property name="wordWrap">
         <bool>false</bool>

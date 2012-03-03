@@ -60,8 +60,6 @@ void SubteacherWindow::initWidgets(){
     ui->playButton->setIcon(QIcon::fromTheme("media-playback-start"));
     ui->goBackButton->setIcon(QIcon::fromTheme("media-skip-backward"));
     ui->skipButton->setIcon(QIcon::fromTheme("media-skip-forward"));
-
-    ui->ansEdit->setFocus();
 }
 
 void SubteacherWindow::initSlotsAndSignals(){
@@ -69,7 +67,7 @@ void SubteacherWindow::initSlotsAndSignals(){
     QObject::connect(ui->settingsButton, SIGNAL(clicked()), this, SLOT(showSettings()));
     QObject::connect(ui->wordbaseButton, SIGNAL(clicked()), this, SLOT(showWordBase()));
     QObject::connect(ui->loadButton, SIGNAL(clicked()), this, SLOT(showLoadWindow()));
-    QObject::connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(showSaveWindow()));
+    QObject::connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(save()));
     QObject::connect(ui->newButton, SIGNAL(clicked()), this, SLOT(showNewMediaWindow()));
     QObject::connect(ui->continueButton, SIGNAL(clicked()), this, SLOT(playLast()));
 
@@ -112,9 +110,10 @@ void SubteacherWindow::showLoadWindow(){
     loadMediaWindow->show(stt->getNameList());
 }
 
-void SubteacherWindow::showSaveWindow(){
-    fileWindow->setAcceptMode(QFileDialog::AcceptSave);
-    fileWindow->show();
+void SubteacherWindow::save(){
+    if(sm){
+        stt->setAt(loadMediaWindow->getIndex());
+    }
 }
 
 void SubteacherWindow::showNewMediaWindow(){
@@ -171,9 +170,10 @@ void SubteacherWindow::loadMedia(int i){
     if(sm){
         delete sm;
     }
-    sm = new SubManager(stt->getSub(at));
+    sm = new SubManager(stt->getSub(at), stt->getAt(at), 0);
     stt->setSubManager(sm);
     ui->subLabel->clear();
+    ui->ansEdit->setFocus();
 }
 
 void SubteacherWindow::addMedia(){

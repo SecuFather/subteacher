@@ -23,12 +23,13 @@ void SubTeacherThread::run(){
     while(true){
         while(!step);
 
-        if(!first || (first=false)){
+        if(!first || (first=false) || sm->currentAt()){
             int s = sm->currentSubStart() - sm->getSubMargin();
             if(s<0){
                 s=0;
             }
             vp->seek(s);
+
             while(sm->finishSubFrame(vp->currentTime()));
             if(correct){
                 b = false;
@@ -40,7 +41,9 @@ void SubTeacherThread::run(){
             }
         }
 
-        emit mediaPlay(true);        
+        emit mediaPlay(true);
+
+
 
         while(sm->startSubFrame(vp->currentTime()));
         emit showSubs(b);
@@ -123,6 +126,10 @@ QString SubTeacherThread::getTrSub(int i){
 
 int SubTeacherThread::getAt(int i){
     return atList->at(i);
+}
+
+void SubTeacherThread::setAt(int i){
+    atList->replace(i, sm->currentAt());
 }
 
 void SubTeacherThread::setSubManager(SubManager *sm){

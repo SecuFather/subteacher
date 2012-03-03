@@ -27,6 +27,7 @@ public:
     QString getSub(int i);
     QString getTrSub(int i);
     int getAt(int i);
+    void setAt(int i);
 
     void setSubManager(SubManager *sm);
 private:

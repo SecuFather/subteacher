@@ -53,7 +53,7 @@ public slots:
     void showSettings();
     void showWordBase();
     void showLoadWindow();
-    void showSaveWindow();
+    void save();
     void showNewMediaWindow();
 
     void playLast();

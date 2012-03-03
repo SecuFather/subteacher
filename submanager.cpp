@@ -6,7 +6,7 @@
 #include <QStack>
 #include <QStringList>
 
-SubManager::SubManager(QString filePath, int subMargin) :  at(0), subMargin(subMargin), init(false){
+SubManager::SubManager(QString filePath, int at, int subMargin) :  at(at), subMargin(subMargin), init(false){
     QFile file(filePath);
     QString line;
     QStack<int> subStartStack;
@@ -110,6 +110,10 @@ QString SubManager::currentSub(){
 
 int SubManager::currentSubStart(){
     return subStart[at];
+}
+
+int SubManager::currentAt(){
+    return at;
 }
 
 QString SubManager::help(QString hint){

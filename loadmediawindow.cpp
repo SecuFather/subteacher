@@ -10,7 +10,7 @@ LoadMediaWindow::LoadMediaWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Load");
-    setWindowIcon(QIcon::fromTheme("document-open"));
+    setWindowIcon(QIcon::fromTheme("document-open"));    
 }
 
 LoadMediaWindow::~LoadMediaWindow()
@@ -39,5 +39,9 @@ QString LoadMediaWindow::getMedia(){
 }
 
 int LoadMediaWindow::getIndex(){
-    return ui->mediaList->currentIndex().row();
+    if(ui->mediaList->count()){
+        return ui->mediaList->currentIndex().row();
+    }else{
+        return 0;
+    }
 }
